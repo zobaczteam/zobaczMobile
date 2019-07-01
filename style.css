@@ -1,0 +1,10 @@
+body {
+    background-image: url(img/bg-map.jpg);
+    height: 100vh;
+    background-position: center;
+    background-size: cover;
+    color: #485e74;
+    line-height: 1.6;
+    font-family: 'Century Gothic';
+    padding: 1em;
+}
