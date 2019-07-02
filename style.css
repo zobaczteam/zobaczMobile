@@ -111,3 +111,109 @@ body {
 .visible {
     display: block;
 }
+<<<<<<< HEAD
+=======
+
+.wrapper2 {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: .5em;
+}
+
+.search-bar {
+    position: relative;
+    top: 4em;
+    display: grid;
+    background: var(--main-background-grid-element-color);
+    grid-row: 2;
+    grid-column: 1/8;
+}
+
+.map {
+    display: grid;
+    background: var(--main-background-grid-element-color);
+    grid-row: 3;
+    grid-column: 1/8;
+	margin-top: 60px;
+}
+
+.wiki {
+    display: grid;
+    background: var(--main-background-grid-element-color);
+    grid-row: 4;
+    grid-column: 1/8;
+}
+
+
+.info {
+    display: grid;
+    background: var(--main-background-grid-element-color);
+    grid-row: 5;
+    grid-column: 1/8;
+}
+/*
+body {
+    background: var(--main-background-body-color);
+}
+*/
+.menu-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.menu-wrap .toggler {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+}
+
+.menu-wrap .hamburger {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 30px;
+    height: 30px;
+    padding: 1rem;
+    background: #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hamburger menu */
+.menu-wrap .hamburger > div{
+    position: relative;
+    width: 100%;
+    height: 2px;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .4s ease;
+}
+
+/* Top and bottom line */
+.menu-wrap .hamburger > div:before,
+.menu-wrap .hamburger > div:after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: -10px;
+    width: 100%;
+    height: 2px;
+    background: inherit;
+}
+
+/* Line down */
+.menu-wrap .hamburger > div:after {
+    top: 10px;
+}
+>>>>>>> origin/Ania_branch

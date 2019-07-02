@@ -27,6 +27,10 @@ function createContainer() {
 	
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Ania_branch
 function sendLogin() {
 		var email = document.getElementById("stRegEmail").value;
 		var pass = document.getElementById("stRegPass").value;
