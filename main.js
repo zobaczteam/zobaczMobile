@@ -1,4 +1,5 @@
 
+
 	firebase.auth().onAuthStateChanged(user=>{ 
 		if(user || response.status=='connected'){
 			mainFuncSite();
@@ -8,6 +9,8 @@
 			}
 		}
 	});
+
+
 
 
 
@@ -90,12 +93,14 @@ function destField(pFieldName, chFieldName) {
 	}
 }
 
+
 function destField2(chFieldName) {
 	if(document.getElementById(chFieldName)) {
 		var chElem = document.getElementById(chFieldName);
 		document.body.removeChild(chElem);
 	}
 }
+
 
 function registerVisible() {
 	if ( !document.getElementById('container') ) {
