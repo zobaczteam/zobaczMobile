@@ -1,4 +1,4 @@
-loginVisible()
+loginVisible();
 
 function createContainer() {
 	var createBlockCont = document.createElement("div");
@@ -15,6 +15,34 @@ function createContainer() {
 	createBlockFormMain.setAttribute("id", "form-main");
 	createBlockWrapper.appendChild(createBlockFormMain);
 	
+}
+
+function sendLogin() {
+		var email = document.getElementById("stRegEmail").value;
+		var pass = document.getElementById("stRegPass").value;
+		var checkValueEmail=checkEmail(email, 'logMailMesg');
+		var checkValuePass=checkPass(email, 'logPassMesg');
+		if(checkValueEmail==1 && checkValuePass==1) {
+			firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error) {
+				var errorCode = error.code;
+				var errorMessage = error.message;
+			});
+			destField('form-main', 'login'); 
+		}
+}
+
+function sendRegister() {
+		var email = document.getElementById("stRegEmail").value;
+		var pass = document.getElementById("stRegPass").value;
+		var checkValueEmail=checkEmail(email, 'logMailMesg');
+		var checkValuePass=checkPass(email, 'logPassMesg');
+		if(checkValueEmail==1 && checkValuePass==1) {
+			firebase.auth().createUserWithEmailAndPassword(email, pass).catch(function(error) {
+				var errorCode = error.code;
+				var errorMessage = error.message;
+			});
+			loginVisible();
+		}
 }
 
 function checkEmail(wartosc, nazwaId) {
