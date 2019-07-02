@@ -17,6 +17,7 @@ function createContainer() {
 	
 }
 
+
 function sendLogin() {
 		var email = document.getElementById("stRegEmail").value;
 		var pass = document.getElementById("stRegPass").value;
