@@ -1,5 +1,4 @@
-loginVisible() 
-
+loginVisible()
 
 function createContainer() {
 	var createBlockCont = document.createElement("div");
@@ -17,9 +16,6 @@ function createContainer() {
 	createBlockWrapper.appendChild(createBlockFormMain);
 	
 }
-
-
-
 
 function checkEmail(wartosc, nazwaId) {
 	var wzor = /[a-z0-9\-\_\.]+\@{1}[a-z0-9]+\.{1}[a-z0-9]+/;
@@ -44,6 +40,7 @@ function checkPass(wartosc, nazwaId) {
 		return 1;
 	}
 }
+
   
 function destField(pFieldName, chFieldName) {
 	var pElem = document.getElementById(pFieldName);
