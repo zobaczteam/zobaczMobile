@@ -12,16 +12,6 @@ function staMS(response) {
 	});
 }
 
-function fbStat() {
-	if(typeof(FB) !== 'undefined') {
-		FB.getLoginStatus(function(response) {
-			staMS(response);
-		});
-	} else {
-		staMS('undefined');	
-	}
-}
-
 function logOut() {
 	firebase.auth().signOut();
 	console.log('logged out');
@@ -275,6 +265,7 @@ function mainFuncSite() {
 	createBlock9.setAttribute("id", "wiki");
 	createBlock5.appendChild(createBlock9);
 }
+
 
 
 function createBMap(parentId) {
