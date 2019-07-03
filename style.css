@@ -112,6 +112,7 @@ body {
     display: block;
 }
 
+
 .wrapper2 {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -214,6 +215,7 @@ body {
 .menu-wrap .hamburger > div:after {
     top: 10px;
 }
+
 
 /* Toggler animate */
 .menu-wrap .toggler:checked + .hamburger > div {
@@ -379,3 +381,4 @@ body {
         width: 20px;
     }
 }
+

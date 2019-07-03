@@ -1,5 +1,4 @@
 
-
 	firebase.auth().onAuthStateChanged(user=>{ 
 		if(user || response.status=='connected'){
 			mainFuncSite();
@@ -9,9 +8,6 @@
 			}
 		}
 	});
-
-
-
 
 
 function createContainer() {
@@ -31,7 +27,10 @@ function createContainer() {
 	
 }
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/Ania_branch
 function sendLogin() {
 		var email = document.getElementById("stRegEmail").value;
 		var pass = document.getElementById("stRegPass").value;
@@ -84,6 +83,13 @@ function checkPass(wartosc, nazwaId) {
 	}
 }
 
+function showCheckedValue(wartosc, nazwaId, tekst) {
+	if (wartosc==0) {
+		document.getElementById(nazwaId).innerHTML=tekst;
+	} else {
+		document.getElementById(nazwaId).innerHTML='';
+	}
+}
   
 function destField(pFieldName, chFieldName) {
 	var pElem = document.getElementById(pFieldName);
@@ -93,14 +99,12 @@ function destField(pFieldName, chFieldName) {
 	}
 }
 
-
 function destField2(chFieldName) {
 	if(document.getElementById(chFieldName)) {
 		var chElem = document.getElementById(chFieldName);
 		document.body.removeChild(chElem);
 	}
 }
-
 
 function registerVisible() {
 	if ( !document.getElementById('container') ) {
@@ -209,4 +213,31 @@ function mainFuncSite() {
 	var createLabel3 = document.createElement("label");
 	createBlock6.appendChild(createLabel3);
 	
+	var createInput4 = document.createElement("input");
+	createInput4.setAttribute("type", "radio");
+	createInput4.setAttribute("name", "rodzMiejsce");
+	createInput4.setAttribute("id", "wybGPS");
+	createInput4.setAttribute("value", "wybGPS");
+	createInput4.setAttribute("onclick", "checkChecked(this.value)");
+	createLabel3.appendChild(createInput4);
+	
+	var createSpan3 = document.createElement("span");
+	createSpan3.innerHTML="GPS";
+	createLabel3.appendChild(createSpan3);
+	
+	
+	var createBlock7 = document.createElement("div");
+	createBlock7.setAttribute("class", "map");
+	createBlock7.setAttribute("id", "map");
+	createBlock5.appendChild(createBlock7);
+	
+	var createBlock8 = document.createElement("div");
+	createBlock8.setAttribute("class", "info");
+	createBlock8.setAttribute("id", "info");
+	createBlock5.appendChild(createBlock8);
+	
+	var createBlock9 = document.createElement("div");
+	createBlock9.setAttribute("class", "wiki");
+	createBlock9.setAttribute("id", "wiki");
+	createBlock5.appendChild(createBlock9);
 }
