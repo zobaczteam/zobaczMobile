@@ -112,7 +112,10 @@ body {
     display: block;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> Patryk_branch
 .wrapper2 {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -216,7 +219,10 @@ body {
     top: 10px;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> Patryk_branch
 /* Toggler animate */
 .menu-wrap .toggler:checked + .hamburger > div {
     transform: rotate(135deg);
@@ -380,5 +386,9 @@ body {
         height: 20px;
         width: 20px;
     }
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> Patryk_branch
