@@ -22,7 +22,6 @@ function fbStat() {
 	}
 }
 
-
 function logOut() {
 	firebase.auth().signOut();
 	console.log('logged out');
@@ -39,7 +38,6 @@ function logOut() {
 	
 	
 }
-
 
 function createContainer() {
 	var createBlockCont = document.createElement("div");
@@ -278,6 +276,63 @@ function mainFuncSite() {
 	createBlock5.appendChild(createBlock9);
 }
 
+function checkChecked(wartosc) {
+	if (wartosc=="wybLista") {
+		createWLoc('search-bar');
+		document.getElementById("wybMap").removeAttribute("checked");
+		document.getElementById("wybGPS").removeAttribute("checked");
+	} else if (wartosc=="wybMap") {
+		createBMap('search-bar');
+		document.getElementById("wybGPS").removeAttribute("checked");
+		document.getElementById("wybLista").removeAttribute("checked");
+	} else  if (wartosc=="wybGPS") {
+		getLocGPS();
+		document.getElementById("wybLista").removeAttribute("checked");
+		document.getElementById("wybMap").removeAttribute("checked");
+	}
+}
+
+function getLocGPS() {
+	destField('search-bar', 'wyborMiejsce');
+	destField('search-bar', 'wyborMapa');
+	destField('search-bar', 'wyborGPSK');
+	destField('search-bar', 'wyborKategorii');
+	destField('search-bar', 'wyborPodkategorii');
+	var parentIdGetMain=document.getElementById('search-bar');
+	var createBlockMap = document.createElement("div");
+	createBlockMap.setAttribute("id", "wyborGPS");
+	parentIdGetMain.appendChild(createBlockMap);
+	var createBlockC = document.createElement("div");
+	createBlockC.setAttribute("id", "wyborGPSK");
+	createBlockMap.appendChild(createBlockC);
+	
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(showPosition);
+	} else { 
+		var createBlockP = document.createElement("p");
+		createBlockP.innerHTML='Brak dostępu do GPS'
+		createBlockMap.appendChild(createBlockP);
+	}
+}
+
+function showPosition(position) {
+	var lat = position.coords.latitude; 
+	var lon = position.coords.longitude;
+	
+	var element = document.getElementById('wyborGPSK');
+	element.innerText =  "Twoje współrzędne geograficzne: "+lat+" "+ lon;
+	var createBlockH1 = document.createElement("input");
+	createBlockH1.setAttribute("id", "coor1");
+	createBlockH1.setAttribute("type", "hidden");
+	createBlockH1.setAttribute("value", lat);
+	element.appendChild(createBlockH1);
+	var createBlockH2 = document.createElement("input");
+	createBlockH2.setAttribute("id", "coor2");
+	createBlockH2.setAttribute("type", "hidden");
+	createBlockH2.setAttribute("value", lon);
+	element.appendChild(createBlockH2);
+	createKategory('search-bar');
+}
 
 function createBMap(parentId) {
 	destField('search-bar', 'wyborMiejsce');
@@ -764,4 +819,4 @@ function wyswitlInfoWiki(tekst, kraj, tytul) {
 		createWikiLink.innerHTML="Więcej w artykule na wikipedii";
 		parentIdGet.appendChild(createWikiLink);
 	}
-
+}
