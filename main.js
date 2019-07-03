@@ -292,6 +292,29 @@ function checkChecked(wartosc) {
 	}
 }
 
+function getLocGPS() {
+	destField('search-bar', 'wyborMiejsce');
+	destField('search-bar', 'wyborMapa');
+	destField('search-bar', 'wyborGPSK');
+	destField('search-bar', 'wyborKategorii');
+	destField('search-bar', 'wyborPodkategorii');
+	var parentIdGetMain=document.getElementById('search-bar');
+	var createBlockMap = document.createElement("div");
+	createBlockMap.setAttribute("id", "wyborGPS");
+	parentIdGetMain.appendChild(createBlockMap);
+	var createBlockC = document.createElement("div");
+	createBlockC.setAttribute("id", "wyborGPSK");
+	createBlockMap.appendChild(createBlockC);
+	
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(showPosition);
+	} else { 
+		var createBlockP = document.createElement("p");
+		createBlockP.innerHTML='Brak dostępu do GPS'
+		createBlockMap.appendChild(createBlockP);
+	}
+}
+
 function createBMap(parentId) {
 	destField('search-bar', 'wyborMiejsce');
 	destField('search-bar', 'wyborMapa');
