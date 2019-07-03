@@ -22,7 +22,6 @@ function fbStat() {
 	}
 }
 
-
 function logOut() {
 	firebase.auth().signOut();
 	console.log('logged out');
@@ -39,7 +38,6 @@ function logOut() {
 	
 	
 }
-
 
 function createContainer() {
 	var createBlockCont = document.createElement("div");
@@ -764,4 +762,4 @@ function wyswitlInfoWiki(tekst, kraj, tytul) {
 		createWikiLink.innerHTML="Więcej w artykule na wikipedii";
 		parentIdGet.appendChild(createWikiLink);
 	}
-
+}
