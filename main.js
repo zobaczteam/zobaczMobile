@@ -12,6 +12,16 @@ function staMS(response) {
 	});
 }
 
+function fbStat() {
+	if(typeof(FB) !== 'undefined') {
+		FB.getLoginStatus(function(response) {
+			staMS(response);
+		});
+	} else {
+		staMS('undefined');	
+	}
+}
+
 function logOut() {
 	firebase.auth().signOut();
 	console.log('logged out');
@@ -266,7 +276,44 @@ function mainFuncSite() {
 	createBlock5.appendChild(createBlock9);
 }
 
+function checkChecked(wartosc) {
+	if (wartosc=="wybLista") {
+		createWLoc('search-bar');
+		document.getElementById("wybMap").removeAttribute("checked");
+		document.getElementById("wybGPS").removeAttribute("checked");
+	} else if (wartosc=="wybMap") {
+		createBMap('search-bar');
+		document.getElementById("wybGPS").removeAttribute("checked");
+		document.getElementById("wybLista").removeAttribute("checked");
+	} else  if (wartosc=="wybGPS") {
+		getLocGPS();
+		document.getElementById("wybLista").removeAttribute("checked");
+		document.getElementById("wybMap").removeAttribute("checked");
+	}
+}
 
+function getLocGPS() {
+	destField('search-bar', 'wyborMiejsce');
+	destField('search-bar', 'wyborMapa');
+	destField('search-bar', 'wyborGPSK');
+	destField('search-bar', 'wyborKategorii');
+	destField('search-bar', 'wyborPodkategorii');
+	var parentIdGetMain=document.getElementById('search-bar');
+	var createBlockMap = document.createElement("div");
+	createBlockMap.setAttribute("id", "wyborGPS");
+	parentIdGetMain.appendChild(createBlockMap);
+	var createBlockC = document.createElement("div");
+	createBlockC.setAttribute("id", "wyborGPSK");
+	createBlockMap.appendChild(createBlockC);
+	
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(showPosition);
+	} else { 
+		var createBlockP = document.createElement("p");
+		createBlockP.innerHTML='Brak dostępu do GPS'
+		createBlockMap.appendChild(createBlockP);
+	}
+}
 
 function createBMap(parentId) {
 	destField('search-bar', 'wyborMiejsce');
