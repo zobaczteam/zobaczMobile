@@ -315,6 +315,25 @@ function getLocGPS() {
 	}
 }
 
+function showPosition(position) {
+	var lat = position.coords.latitude; 
+	var lon = position.coords.longitude;
+	
+	var element = document.getElementById('wyborGPSK');
+	element.innerText =  "Twoje współrzędne geograficzne: "+lat+" "+ lon;
+	var createBlockH1 = document.createElement("input");
+	createBlockH1.setAttribute("id", "coor1");
+	createBlockH1.setAttribute("type", "hidden");
+	createBlockH1.setAttribute("value", lat);
+	element.appendChild(createBlockH1);
+	var createBlockH2 = document.createElement("input");
+	createBlockH2.setAttribute("id", "coor2");
+	createBlockH2.setAttribute("type", "hidden");
+	createBlockH2.setAttribute("value", lon);
+	element.appendChild(createBlockH2);
+	createKategory('search-bar');
+}
+
 function createBMap(parentId) {
 	destField('search-bar', 'wyborMiejsce');
 	destField('search-bar', 'wyborMapa');
