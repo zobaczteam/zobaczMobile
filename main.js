@@ -10,23 +10,6 @@
 	});
 
 
-function logOut() {
-	firebase.auth().signOut();
-	console.log('logged out');
-	if (FB.getAccessToken() != null) {
-            FB.logout(function(response) {
-                
-            });
-        }
-	destField2('wrapper2');
-	destField2('menu-wrap');
-	if(!document.getElementById('login')) {
-		loginVisible();
-	}
-	
-	
-}
-
 function createContainer() {
 	var createBlockCont = document.createElement("div");
 	createBlockCont.setAttribute("id", "container");
@@ -45,9 +28,13 @@ function createContainer() {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> origin/Ania_branch
+=======
+
+>>>>>>> Patryk_branch
 function sendLogin() {
 		var email = document.getElementById("stRegEmail").value;
 		var pass = document.getElementById("stRegPass").value;
@@ -258,8 +245,6 @@ function mainFuncSite() {
 	createBlock9.setAttribute("id", "wiki");
 	createBlock5.appendChild(createBlock9);
 }
-
-
 
 function createBMap(parentId) {
 	destField('search-bar', 'wyborMiejsce');
@@ -537,8 +522,37 @@ function podKatSel(tablica, parentId) {
 function podKatOptGen(wartosc) {
 	var createOption = document.createElement("option");
 	createOption.setAttribute("value", wartosc);
-
+	createOption.setAttribute("onclick", "pobierzListaObiektow(this.value, 'info')");
 	createOption.innerHTML=wartosc;
 	var parentIdGet=document.getElementById('nazwaPodkategorii');
 	parentIdGet.appendChild(createOption);
+}
+
+
+
+function pobierzListaObiektow(nazwaPodkategorii, parentId) {
+	
+	if (document.getElementById('WLoc')) {
+		var nazwaMiasta=document.getElementById('WLoc').value;
+	}
+	var nazwaKategorii=document.getElementById('nazwaKategorii').value;
+	
+	if (document.getElementById('coor1') && document.getElementById('coor2')) {
+		var lon = document.getElementById('coor1').value;
+		var lat = document.getElementById('coor2').value;
+	}
+	var pobPod = new XMLHttpRequest();
+	pobPod.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var objJSON = JSON.parse(this.responseText);
+			var objJElem = objJSON.elements;
+		
+		}
+	};
+	if (document.getElementById('WLoc')) {
+		pobPod.open("GET", "https://www.overpass-api.de/api/interpreter?data=[out:json][timeout:25];(area[name='"+nazwaMiasta+"'];)-%3E.searchArea;(node['"+nazwaKategorii+"'='"+nazwaPodkategorii+"'](area.searchArea);relation['"+nazwaKategorii+"'='"+nazwaPodkategorii+"'](area.searchArea););out%20body;", true);
+	} else if (document.getElementById('coor1') && document.getElementById('coor2')) {
+		pobPod.open("GET", "https://www.overpass-api.de/api/interpreter?data=[out:json][timeout:25];node['"+nazwaKategorii+"'='"+nazwaPodkategorii+"'](around:1000, "+lat+", "+lon+");relation['"+nazwaKategorii+"'='"+nazwaPodkategorii+"'](around:1000, "+lat+", "+lon+");out%20body;%3E;out%20skel%20qt;", true);
+	}
+	pobPod.send();
 }
