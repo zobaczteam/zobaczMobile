@@ -12,6 +12,16 @@ function staMS(response) {
 	});
 }
 
+function fbStat() {
+	if(typeof(FB) !== 'undefined') {
+		FB.getLoginStatus(function(response) {
+			staMS(response);
+		});
+	} else {
+		staMS('undefined');	
+	}
+}
+
 function logOut() {
 	firebase.auth().signOut();
 	console.log('logged out');
@@ -266,7 +276,21 @@ function mainFuncSite() {
 	createBlock5.appendChild(createBlock9);
 }
 
-
+function checkChecked(wartosc) {
+	if (wartosc=="wybLista") {
+		createWLoc('search-bar');
+		document.getElementById("wybMap").removeAttribute("checked");
+		document.getElementById("wybGPS").removeAttribute("checked");
+	} else if (wartosc=="wybMap") {
+		createBMap('search-bar');
+		document.getElementById("wybGPS").removeAttribute("checked");
+		document.getElementById("wybLista").removeAttribute("checked");
+	} else  if (wartosc=="wybGPS") {
+		getLocGPS();
+		document.getElementById("wybLista").removeAttribute("checked");
+		document.getElementById("wybMap").removeAttribute("checked");
+	}
+}
 
 function createBMap(parentId) {
 	destField('search-bar', 'wyborMiejsce');
