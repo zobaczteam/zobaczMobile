@@ -22,6 +22,25 @@ function fbStat() {
 	}
 }
 
+
+function logOut() {
+	firebase.auth().signOut();
+	console.log('logged out');
+	if (FB.getAccessToken() != null) {
+            FB.logout(function(response) {
+                
+            });
+        }
+	destField2('wrapper2');
+	destField2('menu-wrap');
+	if(!document.getElementById('login')) {
+		loginVisible();
+	}
+	
+	
+}
+
+
 function createContainer() {
 	var createBlockCont = document.createElement("div");
 	createBlockCont.setAttribute("id", "container");
@@ -258,6 +277,7 @@ function mainFuncSite() {
 	createBlock9.setAttribute("id", "wiki");
 	createBlock5.appendChild(createBlock9);
 }
+
 
 function createBMap(parentId) {
 	destField('search-bar', 'wyborMiejsce');
@@ -744,4 +764,4 @@ function wyswitlInfoWiki(tekst, kraj, tytul) {
 		createWikiLink.innerHTML="Więcej w artykule na wikipedii";
 		parentIdGet.appendChild(createWikiLink);
 	}
-}
+
