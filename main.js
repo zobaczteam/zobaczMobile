@@ -1,4 +1,6 @@
+fbStat();
 
+function staMS(response) {
 	firebase.auth().onAuthStateChanged(user=>{ 
 		if(user || response.status=='connected'){
 			mainFuncSite();
@@ -8,7 +10,34 @@
 			}
 		}
 	});
+}
 
+function fbStat() {
+	if(typeof(FB) !== 'undefined') {
+		FB.getLoginStatus(function(response) {
+			staMS(response);
+		});
+	} else {
+		staMS('undefined');	
+	}
+}
+
+function logOut() {
+	firebase.auth().signOut();
+	console.log('logged out');
+	if (FB.getAccessToken() != null) {
+            FB.logout(function(response) {
+                
+            });
+        }
+	destField2('wrapper2');
+	destField2('menu-wrap');
+	if(!document.getElementById('login')) {
+		loginVisible();
+	}
+	
+	
+}
 
 function createContainer() {
 	var createBlockCont = document.createElement("div");
@@ -27,6 +56,14 @@ function createContainer() {
 	
 }
 
+function sendFBLogin() {
+	if(typeof(FB) !== 'undefined') {
+		FB.login(function(response){
+			destField('form-main', 'login'); 
+			fbStat();
+		});
+	}
+}
 
 function sendLogin() {
 		var email = document.getElementById("stRegEmail").value;
@@ -237,4 +274,492 @@ function mainFuncSite() {
 	createBlock9.setAttribute("class", "wiki");
 	createBlock9.setAttribute("id", "wiki");
 	createBlock5.appendChild(createBlock9);
+}
+
+
+function createBMap(parentId) {
+	destField('search-bar', 'wyborMiejsce');
+	destField('search-bar', 'wyborMapa');
+	destField('search-bar', 'wyborGPSK');
+	destField('search-bar', 'wyborKategorii');
+	destField('search-bar', 'wyborPodkategorii');
+	var parentIdGetMain=document.getElementById('search-bar');
+	var createBlockMap = document.createElement("div");
+	createBlockMap.setAttribute("id", "wyborMapa");
+	parentIdGetMain.appendChild(createBlockMap);
+	var createBlockP = document.createElement("h4");
+	createBlockP.innerHTML='Wybierz miejsce na mapie'
+	createBlockMap.appendChild(createBlockP);
+	var createBlockC = document.createElement("div");
+	createBlockC.setAttribute("id", "wyborMapK");
+	createBlockMap.appendChild(createBlockC);
+	showMapSetView();
+	
+}
+
+function showMapPoly() {
+	var polyFeature = new ol.Feature({
+		geometry: new ol.geom.Point([19.129808, 50.618671]),
+		projection: 'EPSG:4326'
+	
+	}); 
+	return polyFeature;
+}
+
+function showMapVector() {
+	var polyFeature = showMapPoly();
+	var vectorLayer = new ol.layer.Vector({
+	    source: new ol.source.Vector({
+		features: [polyFeature]
+	    })
+	});
+	return vectorLayer;
+}
+
+function showMapOSML() {
+	var osmLayer = new ol.layer.Tile({
+	source: new ol.source.OSM()
+	});
+	return osmLayer;
+}
+
+function showMapView() {
+	var view = new ol.View({
+	projection: 'EPSG:4326',
+	zoom: 18
+	});
+	view.setCenter([19.128499, 50.617803]);
+	return view;
+}
+
+
+function showMapGenMap() {
+	var osmLayer = showMapOSML();
+	var vectorLayer = showMapVector();
+	var view = showMapView();
+
+		var map = new ol.Map({
+			target: 'wyborMapa',
+			view: view,
+			layers: [ osmLayer,vectorLayer]
+		});
+		return map;
+}
+
+function showMapSetView() {
+	var map = showMapGenMap();
+	var view = showMapView();
+	map.setView(view);
+	
+	var addMap = document.getElementById('wyborMapa');
+	 addMap.addEventListener('click', function(){getCorMap(map), createKategory('search-bar')});
+}
+
+function getCorMap(nowaMapa) {
+	var polyFeature = showMapPoly();
+	var map = nowaMapa;
+	var getCoorM;
+		var geometry = polyFeature.getGeometry();
+		var coordinate = geometry.getCoordinates();
+		
+		
+		map.on('click', function(evt){
+			getCoorM = evt.coordinate;
+			var i = 0;
+			var tablica=[];
+			for (x in getCoorM) {
+			tablica[i]=getCoorM[x];
+			i++;
+		}
+		
+			var element = document.getElementById('wyborMapK');
+			element.innerText =  "Współrzędne geograficzne wybranego punktu: "+tablica[0]+" "+tablica[1];
+			var createBlockH1 = document.createElement("input");
+			createBlockH1.setAttribute("id", "coor1");
+			createBlockH1.setAttribute("type", "hidden");
+			createBlockH1.setAttribute("value", tablica[0]);
+			element.appendChild(createBlockH1);
+			var createBlockH2 = document.createElement("input");
+			createBlockH2.setAttribute("id", "coor2");
+			createBlockH2.setAttribute("type", "hidden");
+			createBlockH2.setAttribute("value", tablica[1]);
+			element.appendChild(createBlockH2);
+		});
+		
+		
+};	
+
+function createWLoc(parentId) {
+	destField(parentId, 'wyborMiejsce');
+	destField(parentId, 'wyborMapa');
+	destField('search-bar', 'wyborGPSK');
+	destField('search-bar', 'wyborKategorii');
+	destField('search-bar', 'wyborPodkategorii');
+	var parentIdGetMain=document.getElementById(parentId);
+	var createBlock = document.createElement("div");
+	createBlock.setAttribute("id", "wyborMiejsce");
+	parentIdGetMain.appendChild(createBlock);
+	var createSentence = document.createElement("h4");
+	createSentence.innerHTML='Wprowadź nazwę miejscowości'
+	createBlock.appendChild(createSentence);
+	var createField = document.createElement("input");
+	createField.setAttribute("type", "text");
+	createField.setAttribute("name", "nameLoc");
+	createField.setAttribute("id", "WLoc");
+	createField.setAttribute("onblur", "createKategory('search-bar')");
+	createBlock.appendChild(createField);
+}
+
+function createKategory(parentId) {
+	destField(parentId, 'wyborKategorii'); 
+	var parentIdGetMain=document.getElementById(parentId);
+	var createBlock = document.createElement("div");
+	createBlock.setAttribute("id", "wyborKategorii");
+	parentIdGetMain.appendChild(createBlock);
+	var createSentence = document.createElement("h4");
+	createSentence.innerHTML='Wybierz kategorię'
+	createBlock.appendChild(createSentence);
+		
+	var categories = [ "artwork_type", "historic", "museum", "tourism" ];
+		
+	var createSelect = document.createElement("select");
+	createSelect.setAttribute("name", "nazwaKategorii");
+	createSelect.setAttribute("id", "nazwaKategorii");
+	createBlock.appendChild(createSelect);
+	categories.forEach(wyswietlKategorie);
+}
+
+function wyswietlKategorie(wartosc) {
+	var createOption = document.createElement("option");
+	createOption.setAttribute("value", wartosc);
+	createOption.setAttribute("id", "opt"+wartosc);
+	createOption.setAttribute("onclick", "createSubKategory(this.value, 'search-bar')");
+	createOption.innerHTML=wartosc;
+	var parentIdGet=document.getElementById('nazwaKategorii');
+	parentIdGet.appendChild(createOption);
+}
+
+function createSubKategory(nazwaKategorii, parentId) {
+	destField(parentId, 'wyborPodkategorii'); 
+	var parentIdGetMain=document.getElementById(parentId);
+	var createBlock = document.createElement("div");
+	createBlock.setAttribute("id", "wyborPodkategorii");
+	parentIdGetMain.appendChild(createBlock);
+	var createSentence = document.createElement("h4");
+	createSentence.innerHTML='Wybierz podkategorię'
+	createBlock.appendChild(createSentence);
+	
+	if(document.getElementById('WLoc')) {
+		var nazwaMiasta=document.getElementById('WLoc').value;
+		pobierzPodkategorie1(nazwaKategorii, nazwaMiasta, createBlock) ;
+	} else if (document.getElementById('coor1') && document.getElementById('coor2')) {
+		var lat = document.getElementById('coor1').value;
+		var lon = document.getElementById('coor2').value;
+		pobierzPodkategorie2(nazwaKategorii, lon, lat, createBlock) ;
+	}
+}
+
+function pobierzPodkategorie1(nazwaKategorii, nazwaMiasta, parentId) {
+	
+	var pobPod = new XMLHttpRequest();
+	pobPod.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var dane=this.responseText;
+			var daneIlosc=dane.length;
+			var wynik=CSVDoTablicy(dane, '', daneIlosc);
+			podKatSel(wynik, parentId);
+		}
+	};
+	pobPod.open("GET", "https://www.overpass-api.de/api/interpreter?data=[out:csv('"+nazwaKategorii+"')][timeout:25];(area[name='"+nazwaMiasta+"'];)-%3E.searchArea;(node['"+nazwaKategorii+"'~'.*'](area.searchArea);relation['"+nazwaKategorii+"'~'.*'](area.searchArea););out%20body;", true);
+	pobPod.send();
+}
+
+function pobierzPodkategorie2(nazwaKategorii, lon, lat, parentId) {
+	
+	var pobPod = new XMLHttpRequest();
+	pobPod.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var dane=this.responseText;
+			var daneIlosc=dane.length;
+			var wynik=CSVDoTablicy(dane, '', daneIlosc);
+			podKatSel(wynik, parentId);
+		}
+	};
+	pobPod.open("GET", "https://www.overpass-api.de/api/interpreter?data=[out:csv('"+nazwaKategorii+"')][timeout:25];rel['"+nazwaKategorii+"'](around:5000, "+lon+", "+lat+");out%20body;%3E;out%20skel%20qt;", true);
+	pobPod.send();
+}
+
+function CSVDoTablicy(daneCSV, delimiter, iloscZnakow) {
+	var nDelimiter='';
+	var nowaLinia='\n';
+	var cudzyslow = '\"';
+	var zCudzyslow = 0;
+	var i;
+	var koniecDanych='';
+	var znak = daneCSV.charAt(i);
+	var tablicaWiersz = [];
+	var tablicaKolumna = [];
+	var zdanie = '';
+
+	
+	if (delimiter == undefined || delimiter.length == 0) {
+		nDelimiter="";
+	} else {
+		nDelimiter=delimiter;
+	}
+	var ostatCzlon = iloscZnakow - 1;
+	
+	for (i = 0;  i < iloscZnakow; i++) {
+		znak = daneCSV.charAt(i);
+		var ciag = ciag + znak;
+			if (znak ==  nowaLinia) {
+				tablicaKolumna[tablicaKolumna.length]=zdanie + "\n";
+				tablicaWiersz[tablicaWiersz.length]=tablicaKolumna.toString();
+				if ( i == ostatCzlon ) {
+						return tablicaWiersz;
+				}
+				tablicaKolumna.splice(0,tablicaKolumna.length);
+				zdanie='';
+				
+			} else if (znak == cudzyslow && zCudzyslow==0) {
+				zCudzyslow=1;
+			} else if (znak != cudzyslow && zCudzyslow==1) {
+				if (znak != nowaLinia || znak != nDelimiter) {
+					zdanie += znak;
+				}
+			} else if (znak == cudzyslow && zCudzyslow==1) {
+				zCudzyslow=0;
+			} else if (znak == nDelimiter && zCudzyslow==0 && znak != '') {
+				tablicaKolumna[tablicaKolumna.length]=zdanie;
+				zdanie='';
+			} else if (zCudzyslow==0 && (znak == '  ' || znak == '\t' || znak == '\r')) {
+
+			} else if (zCudzyslow==0 && (znak != nowaLinia || znak != nDelimiter)) {
+					zdanie += znak;
+			}
+		
+	}
+}
+
+function podKatSel(tablica, parentId) {
+	var createSelect = document.createElement("select");
+	createSelect.setAttribute("name", "nazwaPodkategorii");
+	createSelect.setAttribute("id", "nazwaPodkategorii");
+	createSelect.setAttribute("size", "3");
+	parentId.appendChild(createSelect);
+	tablica.forEach(podKatOptGen);
+}
+
+function podKatOptGen(wartosc) {
+	var createOption = document.createElement("option");
+	createOption.setAttribute("value", wartosc);
+	createOption.setAttribute("onclick", "pobierzListaObiektow(this.value, 'info')");
+	createOption.innerHTML=wartosc;
+	var parentIdGet=document.getElementById('nazwaPodkategorii');
+	parentIdGet.appendChild(createOption);
+}
+
+
+
+function pobierzListaObiektow(nazwaPodkategorii, parentId) {
+	
+	if (document.getElementById('WLoc')) {
+		var nazwaMiasta=document.getElementById('WLoc').value;
+	}
+	var nazwaKategorii=document.getElementById('nazwaKategorii').value;
+	
+	if (document.getElementById('coor1') && document.getElementById('coor2')) {
+		var lon = document.getElementById('coor1').value;
+		var lat = document.getElementById('coor2').value;
+	}
+	var pobPod = new XMLHttpRequest();
+	pobPod.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var objJSON = JSON.parse(this.responseText);
+			var objJElem = objJSON.elements;
+			 jToA(objJElem)
+		}
+	};
+	if (document.getElementById('WLoc')) {
+		pobPod.open("GET", "https://www.overpass-api.de/api/interpreter?data=[out:json][timeout:25];(area[name='"+nazwaMiasta+"'];)-%3E.searchArea;(node['"+nazwaKategorii+"'='"+nazwaPodkategorii+"'](area.searchArea);relation['"+nazwaKategorii+"'='"+nazwaPodkategorii+"'](area.searchArea););out%20body;", true);
+	} else if (document.getElementById('coor1') && document.getElementById('coor2')) {
+		pobPod.open("GET", "https://www.overpass-api.de/api/interpreter?data=[out:json][timeout:25];node['"+nazwaKategorii+"'='"+nazwaPodkategorii+"'](around:1000, "+lat+", "+lon+");relation['"+nazwaKategorii+"'='"+nazwaPodkategorii+"'](around:1000, "+lat+", "+lon+");out%20body;%3E;out%20skel%20qt;", true);
+	}
+	pobPod.send();
+}
+
+function jToA(objekt) {
+	var tablicaObjId = []
+	var tablicaNazwa = [];
+	var tablicaWikipedia = [];
+	var tablicaLat = [];
+	var tablicaLon = [];
+	
+	for ( x in objekt) {
+		var objL1=objekt[x];
+		if ( typeof objL1.tags != "undefined" ) {
+			tablicaObjId[tablicaObjId.length] = objL1.id;
+			tablicaNazwa[tablicaNazwa.length] = objL1.tags.name;
+			tablicaWikipedia[tablicaWikipedia.length] = objL1.tags.wikipedia;
+			tablicaLat[tablicaLat.length] = objL1.lat;
+			tablicaLon[tablicaLon.length]  = objL1.lon;
+		}
+	}
+	createSiteObject(tablicaObjId, tablicaNazwa, tablicaWikipedia, tablicaLat, tablicaLon);
+}
+
+function createSiteObject(id, nazwa, wikipedia, lat, lon) {
+	var wlkTablicy=nazwa.length;
+	var i;
+	destField('info', 'info1'); 	
+	var parentIdMain=document.getElementById('info');
+	var parentIdGet = document.createElement("div");
+	parentIdGet.setAttribute("id", 'info1');
+	parentIdMain.appendChild(parentIdGet);
+	
+	for ( i = 0; i < wlkTablicy; i++) {
+		var createObj = document.createElement("a");
+		var newWikiName;
+		createObj.setAttribute("href", '#map');
+		createObj.setAttribute("id", id[i]);
+		if ( typeof(wikipedia[i]) != 'undefined' ) {
+			tmpWiki = wikipedia[i];
+			newWikiName = '"' + tmpWiki + '"';
+		} else {
+			newWikiName = "'brak'";
+		}
+		if ( typeof(lon[i]) != 'undefined' && typeof(lon[i]) != 'undefined') {
+			createObj.setAttribute("onclick", "showObjMap("+lon[i]+", "+lat[i]+"), createWikiInfo("+newWikiName+")");
+		} else {
+			createObj.setAttribute("onclick", "showObjMap('brak', 'brak'), createWikiInfo("+newWikiName+")");
+		}
+		if ( typeof(nazwa[i]) !== 'undefined' ) {
+			createObj.innerHTML=nazwa[i];
+		} else {
+			createObj.innerHTML='Nazwa nieznana';
+		}
+		
+		parentIdGet.appendChild(createObj);
+		createBr=document.createElement("br");
+		parentIdGet.appendChild(createBr);
+	}
+}
+
+function showObjMap(lon, lat) {
+	
+	destField('map', 'map1'); 	
+	
+	var createMap = document.createElement("div");
+	createMap.setAttribute("id", 'map1');
+	var parentIdGet=document.getElementById('map');
+	parentIdGet.appendChild(createMap);
+	
+	if ( lon != 'brak' && lon != 'brak' ) {
+		var polyFeature = new ol.Feature({
+		    geometry: new ol.geom.Point([lon, lat]),
+		    projection: 'EPSG:4326'
+		}); 
+
+		var vectorLayer = new ol.layer.Vector({
+		    source: new ol.source.Vector({
+			features: [polyFeature]
+		    })
+		});
+		var osmLayer = new ol.layer.Tile({
+		source: new ol.source.OSM()
+		});
+
+		var view = new ol.View({
+		projection: 'EPSG:4326',
+		zoom: 18
+		});
+		view.setCenter([lon, lat]);
+
+		var map = new ol.Map({
+		target: 'map1',
+		view:view,
+		layers: [ osmLayer,vectorLayer]
+		});
+		map.setView(view);
+
+		var geometryM = polyFeature.getGeometry();
+		var coordinate = geometryM.getCoordinates();
+		
+		
+		var startMarker = new ol.Feature({
+			type: 'icon',
+			geometry: new ol.geom.Point(coordinate)
+		});
+	} else {
+		var createMapU = document.createElement("p");
+		createMapU.innerHTML='Brak danych';
+		createMap.appendChild(createMapU);
+	}
+}
+
+function createWikiInfo(nazwa) {
+	destField('wiki', 'wiki1'); 
+	var createWiki = document.createElement("div");
+	createWiki.setAttribute("id", 'wiki1');
+	var parentIdGet=document.getElementById('wiki');
+	parentIdGet.appendChild(createWiki);
+	if (nazwa != 'brak') {
+		var sName = nazwa.split(":");
+		var SNameOne = sName[0];
+		var SNameTwo = sName[1];
+	} else {
+		var SNameOne = "brak";
+		var SNameTwo = "brak";
+	}
+	pobierzDaneWiki(SNameOne, SNameTwo);
+	
+}
+
+function pobierzDaneWiki(nazwa1, nazwa2) {
+	var textPart;
+	if (nazwa1 != 'brak') {
+		var newNazwaWiki = nazwa2.replace(/ /g, "%20");
+		var pobPod = new XMLHttpRequest();
+		pobPod.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				var objJSON = JSON.parse(this.responseText);
+				var x = 0;
+				var jLvl1;
+				var jLvl2=[];
+				for (i in objJSON.query.pages) {
+					for (j in objJSON.query.pages[i].revisions) {
+						jLvl1=objJSON.query.pages[i].revisions[j];
+						for (k in jLvl1) {
+							jLvl2[x]=jLvl1[k];
+							x++;
+						}
+					}
+					
+				}
+				var textIndex=jLvl2[2].search("Category");
+				textPart=jLvl2[2].slice(textIndex, textIndex + 1000);
+				wyswitlInfoWiki(textPart, nazwa1, newNazwaWiki);
+			}
+		};
+		pobPod.open("GET", "https://"+nazwa1+".wikipedia.org/w/api.php?action=query&titles="+nazwa2+"&prop=revisions&rvprop=content&format=json&origin=*", true);
+		pobPod.send();
+	} else {
+		textPart = "Brak informacji w wikipedia";
+		wyswitlInfoWiki(textPart, "brak", "brak");
+	}
+	
+}
+
+function wyswitlInfoWiki(tekst, kraj, tytul) {
+	var parentIdGet=document.getElementById('wiki1');
+	var createWikiField= document.createElement("p");
+	createWikiField.innerHTML=tekst;
+	parentIdGet.appendChild(createWikiField);
+	if (kraj != 'brak') {
+		var createWikiLink= document.createElement("a");
+		createWikiLink.setAttribute("href", 'https://'+kraj+'.wikipedia.org/wiki/'+tytul);
+		createWikiLink.setAttribute("target", "_blank");
+		createWikiLink.innerHTML="Więcej w artykule na wikipedii";
+		parentIdGet.appendChild(createWikiLink);
+	}
 }
