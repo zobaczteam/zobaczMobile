@@ -1,4 +1,6 @@
+fbStat();
 
+function staMS(response) {
 	firebase.auth().onAuthStateChanged(user=>{ 
 		if(user || response.status=='connected'){
 			mainFuncSite();
@@ -8,24 +10,16 @@
 			}
 		}
 	});
+}
 
-
-
-function logOut() {
-	firebase.auth().signOut();
-	console.log('logged out');
-	if (FB.getAccessToken() != null) {
-            FB.logout(function(response) {
-                
-            });
-        }
-	destField2('wrapper2');
-	destField2('menu-wrap');
-	if(!document.getElementById('login')) {
-		loginVisible();
+function fbStat() {
+	if(typeof(FB) !== 'undefined') {
+		FB.getLoginStatus(function(response) {
+			staMS(response);
+		});
+	} else {
+		staMS('undefined');	
 	}
-	
-	
 }
 
 function createContainer() {
@@ -45,6 +39,14 @@ function createContainer() {
 	
 }
 
+function sendFBLogin() {
+	if(typeof(FB) !== 'undefined') {
+		FB.login(function(response){
+			destField('form-main', 'login'); 
+			fbStat();
+		});
+	}
+}
 
 function sendLogin() {
 		var email = document.getElementById("stRegEmail").value;
