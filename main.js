@@ -430,16 +430,16 @@ function getCorMap(nowaMapa) {
 		}
 		
 			var element = document.getElementById('wyborMapK');
-			element.innerText =  "Współrzędne geograficzne wybranego punktu: "+tablica[0]+" "+tablica[1];
+			element.innerText =  "Współrzędne geograficzne wybranego punktu: "+tablica[1]+" "+tablica[0];
 			var createBlockH1 = document.createElement("input");
 			createBlockH1.setAttribute("id", "coor1");
 			createBlockH1.setAttribute("type", "hidden");
-			createBlockH1.setAttribute("value", tablica[0]);
+			createBlockH1.setAttribute("value", tablica[1]);
 			element.appendChild(createBlockH1);
 			var createBlockH2 = document.createElement("input");
 			createBlockH2.setAttribute("id", "coor2");
 			createBlockH2.setAttribute("type", "hidden");
-			createBlockH2.setAttribute("value", tablica[1]);
+			createBlockH2.setAttribute("value", tablica[0]);
 			element.appendChild(createBlockH2);
 		});
 		
@@ -512,7 +512,7 @@ function createSubKategory(nazwaKategorii, parentId) {
 	} else if (document.getElementById('coor1') && document.getElementById('coor2')) {
 		var lat = document.getElementById('coor1').value;
 		var lon = document.getElementById('coor2').value;
-		pobierzPodkategorie2(nazwaKategorii, lon, lat, createBlock) ;
+		pobierzPodkategorie2(nazwaKategorii, lat, lon, createBlock) ;
 	}
 }
 
@@ -531,7 +531,7 @@ function pobierzPodkategorie1(nazwaKategorii, nazwaMiasta, parentId) {
 	pobPod.send();
 }
 
-function pobierzPodkategorie2(nazwaKategorii, lon, lat, parentId) {
+function pobierzPodkategorie2(nazwaKategorii, lat, lon, parentId) {
 	
 	var pobPod = new XMLHttpRequest();
 	pobPod.onreadystatechange = function() {
@@ -542,7 +542,7 @@ function pobierzPodkategorie2(nazwaKategorii, lon, lat, parentId) {
 			podKatSel(wynik, parentId);
 		}
 	};
-	pobPod.open("GET", "https://www.overpass-api.de/api/interpreter?data=[out:csv('"+nazwaKategorii+"')][timeout:25];rel['"+nazwaKategorii+"'](around:5000, "+lon+", "+lat+");out%20body;%3E;out%20skel%20qt;", true);
+	pobPod.open("GET", "https://www.overpass-api.de/api/interpreter?data=[out:csv(%27"+nazwaKategorii+"%27)][timeout:25];rel[%27"+nazwaKategorii+"%27](around:20000,%20"+lat+",%20"+lon+");out%20body;%3E;out%20skel%20qt;", true);
 	pobPod.send();
 }
 
@@ -608,8 +608,10 @@ function podKatSel(tablica, parentId) {
 }
 
 function podKatOptGen(wartosc) {
+	var dane_wartosc = wartosc;
+	var dane_mod = dane_wartosc.trim();
 	var createOption = document.createElement("option");
-	createOption.setAttribute("value", wartosc);
+	createOption.setAttribute("value", dane_mod);
 	createOption.setAttribute("onclick", "pobierzListaObiektow(this.value, 'info')");
 	createOption.innerHTML=wartosc;
 	var parentIdGet=document.getElementById('nazwaPodkategorii');
@@ -626,8 +628,8 @@ function pobierzListaObiektow(nazwaPodkategorii, parentId) {
 	var nazwaKategorii=document.getElementById('nazwaKategorii').value;
 	
 	if (document.getElementById('coor1') && document.getElementById('coor2')) {
-		var lon = document.getElementById('coor1').value;
-		var lat = document.getElementById('coor2').value;
+		var lat = document.getElementById('coor1').value;
+		var lon = document.getElementById('coor2').value;
 	}
 	var pobPod = new XMLHttpRequest();
 	pobPod.onreadystatechange = function() {
@@ -716,6 +718,14 @@ function showObjMap(lon, lat) {
 		    geometry: new ol.geom.Point([lon, lat]),
 		    projection: 'EPSG:4326'
 		}); 
+		
+		polyFeature.setStyle(new ol.style.Style({
+			image: new ol.style.Icon(({
+			  color: '#ff0000',
+			  crossOrigin: 'anonymous',
+			  src: 'img/dot.png'
+			}))
+		}));
 
 		var vectorLayer = new ol.layer.Vector({
 		    source: new ol.source.Vector({
